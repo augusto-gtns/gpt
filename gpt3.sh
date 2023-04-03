@@ -5,7 +5,7 @@
 ###
 
 if [ "$OPENAI_API_KEY" == "" ]; then
-	printf "\n - please set OPENAI_API_KEY env var \n"
+	printf "\n please set OPENAI_API_KEY env var \n"
 	exit
 fi
 
@@ -28,7 +28,7 @@ display_usage(){
 
 See https://github.com/augusto-gtns/gpt3.
 
-Envinroment configuration values:
+Environment configuration values:
 
 	OPENAI_API_KEY: ******
 	
@@ -46,7 +46,7 @@ Envinroment configuration values:
 
 quick_prompt(){
 	prompt="$@"
-	echo $prompt && exit 0
+
 	payload='{
 		"model": "text-davinci-003",
 		"temperature": '$OPENAI_TEMPERATURE',
@@ -70,7 +70,7 @@ start_chat(){
 	if [ "$role" == "" ]; then
 		role=$OPENAI_CHAT_ROLE
 	fi
-	printf "\nassistant role: $role\n\n"
+	printf "\n assistant role: $role\n\n"
 
 	payload='{
 		"model": "gpt-3.5-turbo",
@@ -140,7 +140,7 @@ elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then
 
 	prompt="${@:2}"
 	while [ "$prompt" == "" ]; do
-		read -p "shell command generation prompt: " prompt
+		read -p "shell generation prompt: " prompt
 	done
 
 	quick_prompt "$OPENAI_SHELL_PREFIX \n\n [os]: $my_os \n\n [prompt]: $prompt"

@@ -25,24 +25,24 @@ chmod +x gpt3.sh
 Run the script on your terminal
 
 - call the script
-    
-    ```bash
-    ./gpt3.sh
-    ```
 
-- Or map an alias on your shel configuration (`.bashrc`, `.zshrc` or others) and call the given alias
+  ```bash
+  ./gpt3.sh
+  ```
 
-    ```bash
-    alias gpt3="~/gpt3.sh"
-    ```
-     
-    ```bash
-    gpt3
-    ```
+- or map an alias on your shell configuration (`.bashrc`, `.zshrc` or others) and call the given alias
+
+  ```bash
+  alias gpt3="~/gpt3.sh"
+  ```
+
+  ```bash
+  gpt3
+  ```
 
 ## Usage
 
-### Prompt once 
+### Prompt once
 
 **[prompt]**
 
@@ -50,23 +50,23 @@ Run the script on your terminal
 gpt3 what is the top 3 most popular programing languages
 ```
 
-### Start a new chat session 
+### Start a new chat session
 
-**[--chat|-c] [assitant-role]**
+**[--chat|-c] [assistant-role]**
 
-> The a assitant role is used to tell the chat the which role should be act.
+> The assistant role is used to tell the chat the which role should be acted.
 
-- Using the default assitant role
-  
-    ```bash
-    gpt3 --chat
-    ```
+- Using the default assistant role
 
-- Suplly a custom assitant role
-  
-    ```bash
-    gpt3 -c You are a tech expert
-    ```
+  ```bash
+  gpt3 --chat
+  ```
+
+- Supply a custom assistant role
+
+  ```bash
+  gpt3 -c You are a tech expert
+  ```
 
 ### Generate shell commands
 
@@ -92,7 +92,7 @@ gpt3 --code
 gpt3 -C java
 ```
 
-### See the usage heper:
+### See the usage helper:
 
 **[--help|-h]**
 
@@ -106,7 +106,7 @@ gpt3 --help
 
 ## Configuration
 
-Available envinroment variables. Run `gpt3 --help` to check the default values.
+Available environment variables. Run `gpt3 --help` to check the default values.
 
 | Var                 | Description                                                                                                                                                            |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -115,7 +115,7 @@ Available envinroment variables. Run `gpt3 --help` to check the default values.
 | OPENAI_CHAT_ROLE    | Default assistant role to start a new chat sessions.                                                                                                                   |
 | OPENAI_SHELL_PREFIX | Default prefix to --shell prompts.                                                                                                                                     |
 | OPENAI_CODE_PREFIX  | Default prefix to --code prompts.                                                                                                                                      |
-> The a assitant role is used to tell the chat the which role should be act.
+
 ## Reference
 
 - [OpenAI API docs](https://platform.openai.com/docs/api-reference)
