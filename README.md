@@ -54,7 +54,7 @@ gpt3 what is the top 3 most popular programing languages
 
 **[--chat|-c] [assistant-role]**
 
-> The assistant role is used to tell the chat the which role should be acted.
+> The assistant role is used to tell the chat which role should be acted.
 
 - Using the default assistant role
 
