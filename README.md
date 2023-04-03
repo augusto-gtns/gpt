@@ -118,13 +118,13 @@ gpt3 --help
 
 Available environment variables. Run `gpt3 --help` to check the default values.
 
-| Var                 | Description                                                                                                                                                            |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OPENAI_API_KEY      | Your personal API key.                                                                                                                                                 |
-| OPENAI_TEMPERATURE  | Default temperature for API calls.<br /> higher values make the output more random, lower values like make it more focused and deterministic [values between 0 and 2]. |
-| OPENAI_CHAT_ROLE    | Default assistant role to start a new chat sessions.                                                                                                                   |
-| OPENAI_SHELL_PREFIX | Default prefix to --shell prompts.                                                                                                                                     |
-| OPENAI_CODE_PREFIX  | Default prefix to --code prompts.                                                                                                                                      |
+| Var                 | Description                                                                                                                                                |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OPENAI_API_KEY      | Your personal API key.                                                                                                                                     |
+| OPENAI_TEMPERATURE  | Default temperature for API calls. Values between 0 and 2. Higher values make the output more random, lower values make it more focused and deterministic. |
+| OPENAI_CHAT_ROLE    | Default assistant role to start a new chat sessions.                                                                                                       |
+| OPENAI_SHELL_PREFIX | Default prefix to --shell prompts.                                                                                                                         |
+| OPENAI_CODE_PREFIX  | Default prefix to --code prompts.                                                                                                                          |
 
 ## Reference
 
