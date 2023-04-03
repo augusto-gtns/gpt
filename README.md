@@ -3,7 +3,6 @@
 Shell script to interact with GPT3 on your terminal.
 
 ## Installation
---- 
 
 Clone this repo or download the `gpt3.sh` script.
 
@@ -42,7 +41,6 @@ Run the script on your terminal
     ```
 
 ## Usage
---- 
 
 ### Prompt once 
 
@@ -119,6 +117,5 @@ Available envinroment variables. Run `gpt3 --help` to check the default values.
 | OPENAI_CODE_PREFIX  | Default prefix to --code prompts.                                                                                                                                      |
 > The a assitant role is used to tell the chat the which role should be act.
 ## Reference
----
 
 - [OpenAI API docs](https://platform.openai.com/docs/api-reference)

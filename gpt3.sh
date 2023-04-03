@@ -11,7 +11,7 @@ fi
 
 [[ -z "${OPENAI_TEMPERATURE}" ]] && OPENAI_TEMPERATURE=0.5
 
-[[ -z "${OPENAI_MAXTOKENS}" ]] && OPENAI_MAXTOKENS=500
+[[ -z "${OPENAI_MAX_TOKENS}" ]] && OPENAI_MAX_TOKENS=500
 
 [[ -z "${OPENAI_CHAT_ROLE}" ]] && OPENAI_CHAT_ROLE="You are a helpful assistant."
 
@@ -34,7 +34,7 @@ Envinroment configuration values:
 	
 	OPENAI_TEMPERATURE: $OPENAI_TEMPERATURE
 
-	OPENAI_MAXTOKENS: $OPENAI_MAXTOKENS
+	OPENAI_MAX_TOKENS: $OPENAI_MAX_TOKENS
 
 	OPENAI_CHAT_ROLE: $OPENAI_CHAT_ROLE
 
@@ -46,11 +46,11 @@ Envinroment configuration values:
 
 quick_prompt(){
 	prompt="$@"
-	
+	echo $prompt && exit 0
 	payload='{
 		"model": "text-davinci-003",
 		"temperature": '$OPENAI_TEMPERATURE',
-		"max_tokens": '$OPENAI_MAXTOKENS',
+		"max_tokens": '$OPENAI_MAX_TOKENS',
 		"prompt": "'$prompt'"
 	}'
 	
@@ -99,6 +99,9 @@ start_chat(){
 		answer=$(jq -r '.choices[].message.content' <<< "${response}")	
 		printf "\n $answer \n\n"
 
+		# escape double quotes
+		answer=$(echo $answer | sed 's/"/\\"/g')
+		
 		assistant_message='{"role": "assistant", "content": "'$answer'"}'
 
 		payload=$(echo $payload | jq ".messages[.messages| length] |= . + $assistant_message")
@@ -111,7 +114,7 @@ start_chat(){
 # MAIN
 ###
 
-if [[ ( $1 == "--help") ||  $1 == "-h" ||  $@ == "" ]]; then 
+if [[ ( $1 == "--help") ||  $1 == "-h" ]]; then 
 	display_usage
 
 elif [[ ( $1 == "--chat") ||  $1 == "-c" ]]; then 	
@@ -125,7 +128,7 @@ elif [[ ( $1 == "--code") ||  $1 == "-C" ]]; then
 	done
 
 	while [ "$prompt" == "" ]; do
-		read -p "prompt: " prompt
+		read -p "code generation prompt: " prompt
 	done
 
 	quick_prompt "$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
@@ -137,11 +140,16 @@ elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then
 
 	prompt="${@:2}"
 	while [ "$prompt" == "" ]; do
-		read -p "prompt: " prompt
+		read -p "shell command generation prompt: " prompt
 	done
 
 	quick_prompt "$OPENAI_SHELL_PREFIX \n\n [os]: $my_os \n\n [prompt]: $prompt"
 
 else	
-	quick_prompt "$@"
+	prompt="$@"
+	while [ "$prompt" == "" ]; do
+		read -p "prompt once: " prompt
+	done
+
+	quick_prompt $prompt
 fi
