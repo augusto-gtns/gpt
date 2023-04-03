@@ -70,7 +70,7 @@ start_chat(){
 	if [ "$role" == "" ]; then
 		role=$OPENAI_CHAT_ROLE
 	fi
-	printf "\n assistant role: $role\n\n"
+	printf "\n🔹assistant role: $role\n\n"
 
 	payload='{
 		"model": "gpt-3.5-turbo",
@@ -83,7 +83,7 @@ start_chat(){
 	while [ true ]; do
 
 		while [ "$prompt" == "" ]; do
-			read -p "you: " prompt
+			read -p "🔹you: " prompt
 		done
 
 		user_message='{"role": "user", "content": "'$prompt'"}'

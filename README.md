@@ -104,6 +104,16 @@ gpt3 -h
 gpt3 --help
 ```
 
+## Usage prints
+
+![quick prompt](img/quick_prompt.png)
+
+![chat](img/chat.png)
+
+![shell](img/shell.png)
+
+![code](img/code.png)
+
 ## Configuration
 
 Available environment variables. Run `gpt3 --help` to check the default values.
