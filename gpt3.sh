@@ -83,7 +83,7 @@ start_chat(){
 	while [ true ]; do
 
 		while [ "$prompt" == "" ]; do
-			read -p "🔹you: " prompt
+			read -e -p "🔹you: " prompt
 		done
 
 		user_message='{"role": "user", "content": "'$prompt'"}'
@@ -124,11 +124,11 @@ elif [[ ( $1 == "--code") ||  $1 == "-C" ]]; then
 	
 	lang="$2"
 	while [ "$lang" == "" ]; do
-		read -p "language: " lang
+		read -e -p "language: " lang
 	done
 
 	while [ "$prompt" == "" ]; do
-		read -p "code generation prompt: " prompt
+		read -e -p "code generation prompt: " prompt
 	done
 
 	quick_prompt "$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
@@ -140,7 +140,7 @@ elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then
 
 	prompt="${@:2}"
 	while [ "$prompt" == "" ]; do
-		read -p "shell generation prompt: " prompt
+		read -e -p "shell generation prompt: " prompt
 	done
 
 	quick_prompt "$OPENAI_SHELL_PREFIX \n\n [os]: $my_os \n\n [prompt]: $prompt"
@@ -148,7 +148,7 @@ elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then
 else	
 	prompt="$@"
 	while [ "$prompt" == "" ]; do
-		read -p "prompt once: " prompt
+		read -e -p "prompt once: " prompt
 	done
 
 	quick_prompt $prompt
