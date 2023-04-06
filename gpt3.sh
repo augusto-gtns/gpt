@@ -58,7 +58,8 @@ quick_prompt(){
 		-H "Content-Type: application/json" \
 		-H "Authorization: Bearer $OPENAI_API_KEY" \
 		-d "$payload" \
-		-k -L -s --connect-timeout 5)
+		-k -L -s \
+		--connect-timeout 5 --max-time 10 --retry 3 --retry-delay 0 --retry-max-time 30)
 
 	answer=$(jq -r '.choices[].text' <<< "${response}")	
 	printf "$answer \n"
@@ -94,7 +95,8 @@ start_chat(){
 			-H "Content-Type: application/json" \
 			-H "Authorization: Bearer $OPENAI_API_KEY" \
 			-d "$payload" \
-			-k -L -s --connect-timeout 10)
+			-k -L -s \
+			--connect-timeout 5 --max-time 10 --retry 3 --retry-delay 0 --retry-max-time 30)
 		
 		answer=$(jq -r '.choices[].message.content' <<< "${response}")	
 		printf "\n $answer \n\n"
