@@ -4,20 +4,14 @@
 # init env
 ###
 
+source .env # default env config
+
+[[ -f .env.custom ]] && source .env.custom # custom config
+
 if [ "$OPENAI_API_KEY" == "" ]; then
 	printf "\n please set OPENAI_API_KEY env var \n"
 	exit
 fi
-
-[[ -z "${OPENAI_TEMPERATURE}" ]] && OPENAI_TEMPERATURE=0.5
-
-[[ -z "${OPENAI_MAX_TOKENS}" ]] && OPENAI_MAX_TOKENS=500
-
-[[ -z "${OPENAI_CHAT_ROLE}" ]] && OPENAI_CHAT_ROLE="You are a helpful assistant."
-
-[[ -z "${OPENAI_SHELL_PREFIX}" ]] && OPENAI_SHELL_PREFIX="Generate a shell command compatible with the operating system [os] and that responds to [prompt]. Add a brief explanation of the generated command."
-
-[[ -z "${OPENAI_CODE_PREFIX}" ]] && OPENAI_CODE_PREFIX="Generate code for the language [lang] and that responds to the [prompt]. Add a brief explanation of the generated code."
 
 ###
 # functions
@@ -25,32 +19,27 @@ fi
 
 display_usage(){
 	echo "
+	[prompt]: 			prompt once
 
-See https://github.com/augusto-gtns/gpt.
+	[--chat|-c] [assistant-role]: 	start a chat session
 
-Environment configuration values:
+	[--code|-C] [language]: 	generate code to a given language
 
-	OPENAI_API_KEY: ******
+	[--shell|-s] [language]:	generate shell comands
 	
-	OPENAI_TEMPERATURE: $OPENAI_TEMPERATURE
+	[--help|-h]:			display usage helper
 
-	OPENAI_MAX_TOKENS: $OPENAI_MAX_TOKENS
-
-	OPENAI_CHAT_ROLE: $OPENAI_CHAT_ROLE
-
-	OPENAI_SHELL_PREFIX: $OPENAI_SHELL_PREFIX
-	
-	OPENAI_CODE_PREFIX: $OPENAI_CODE_PREFIX
+	See more on README.md or https://github.com/augusto-gtns/gpt
 	"
 }
 
-quick_prompt(){
+prompt_once(){
 	prompt="$@"
 
 	payload='{
-		"model": "text-davinci-003",
-		"temperature": '$OPENAI_TEMPERATURE',
-		"max_tokens": '$OPENAI_MAX_TOKENS',
+		"model": "'$OPENAI_COMPL_MODEL'",
+		"temperature": '$OPENAI_COMPL_TEMPERATURE',
+		"max_tokens": '$OPENAI_COMPL_MAX_TOKENS',
 		"prompt": "'$prompt'"
 	}'
 	
@@ -74,8 +63,8 @@ start_chat(){
 	printf "\n🔹assistant role: $role\n\n"
 
 	payload='{
-		"model": "gpt-3.5-turbo",
-		"temperature": '$OPENAI_TEMPERATURE',
+		"model": "'$OPENAI_CHAT_MODEL'",
+		"temperature": '$OPENAI_CHAT_TEMPERATURE',
 		"messages": [
 			{"role": "assistant", "content": "'$role'"}
 		]
@@ -133,7 +122,7 @@ elif [[ ( $1 == "--code") ||  $1 == "-C" ]]; then
 		read -e -p "code generation prompt: " prompt
 	done
 
-	quick_prompt "$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
+	prompt_once "$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
 
 elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then 
 	
@@ -145,7 +134,7 @@ elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then
 		read -e -p "shell generation prompt: " prompt
 	done
 
-	quick_prompt "$OPENAI_SHELL_PREFIX \n\n [os]: $my_os \n\n [prompt]: $prompt"
+	prompt_once "$OPENAI_SHELL_PREFIX \n\n [os]: $my_os \n\n [prompt]: $prompt"
 
 else	
 	prompt="$@"
@@ -153,5 +142,5 @@ else
 		read -e -p "prompt once: " prompt
 	done
 
-	quick_prompt $prompt
+	prompt_once $prompt
 fi
