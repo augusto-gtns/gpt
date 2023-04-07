@@ -1,10 +1,10 @@
 # GPT script
 
-Shell script to interact with GPT on your terminal.
+A shell script to interact with GPT on your terminal.
 
 ## Installation
 
-Clone this repo or download the `gpt.sh` script.
+Clone this repo
 
 ```bash
 git clone https://github.com/augusto-gtns/gpt.git
@@ -16,11 +16,13 @@ Generate and set your personal API key (https://platform.openai.com/account/api-
 export OPENAI_API_KEY=mykey
 ```
 
-Set execution permission.
+Set execution permission
 
 ```bash
 chmod +x gpt.sh
 ```
+
+## Usage
 
 Run the script on your terminal
 
@@ -40,21 +42,21 @@ Run the script on your terminal
   gpt
   ```
 
-## Usage
-
 ### Prompt once
 
-**[prompt]**
+**gpt prompt**
+
+This options uses the completion API to answer a single prompt.
 
 ```bash
-gpt what is the top 3 most popular programing languages
+gpt "what are the top 3 most popular programing languages?"
 ```
 
-### Start a new chat session
+### Start a chat session
 
-**[--chat|-c] [assistant-role]**
+**gpt [--chat|-c] assistant-role**
 
-> The assistant role is used to tell the chat which role should be acted.
+This options uses the chat API to handle multiple sequential prompts.
 
 - Using the default assistant role
 
@@ -65,36 +67,50 @@ gpt what is the top 3 most popular programing languages
 - Supply a custom assistant role
 
   ```bash
-  gpt -c You are a tech expert
+  gpt --chat "You are a tech expert"
   ```
+
+After that the actual chat will start.
+
+> The assistant role is used to tell the chat which role should be acted. 
 
 ### Generate shell commands
 
-**[--shell|-s] [prompt]**
+**gpt [--shell|-s] prompt**
+
+This options uses the completion API to answer a single prompt that aims to generate a shell command.
+
+This is achieved by adding a prefix (`OPENAI_SHELL_PREFIX`) to your actual prompt.
 
 ```bash
 gpt --shell
 ```
 
 ```bash
-gpt -s list the name path and size of the 5 biggest files on my machine
+gpt --shell "list the name, path and size of the 5 biggest files on my whole computer"
 ```
 
 ### Generate code
 
-**[--code|-C] [lang]**
+**gpt [--code|-C] language**
+
+This options uses the completion API to answer a single prompt that aims to generate code for a given language.
+
+This is achieved by adding a prefix (`OPENAI_CODE_PREFIX`) to your actual prompt (works like a shortcut).
 
 ```bash
 gpt --code
 ```
 
 ```bash
-gpt -C java
+gpt --code java
 ```
+
+After that the actual prompt should be provided. 
 
 ### See the usage helper:
 
-**[--help|-h]**
+**gpt [--help|-h]**
 
 ```bash
 gpt -h
@@ -106,15 +122,21 @@ gpt --help
 
 ## Configuration
 
-Available environment variables. Run `gpt --help` to check the default values.
+Available environment variables. Create a `.env.custom` to override the default config.
 
-| Var                 | Description                                                                                                                                                |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OPENAI_API_KEY      | Your personal API key.                                                                                                                                     |
-| OPENAI_TEMPERATURE  | Default temperature for API calls. Values between 0 and 2. Higher values make the output more random, lower values make it more focused and deterministic. |
-| OPENAI_CHAT_ROLE    | Default assistant role to start a new chat sessions.                                                                                                       |
-| OPENAI_SHELL_PREFIX | Default prefix to --shell prompts.                                                                                                                         |
-| OPENAI_CODE_PREFIX  | Default prefix to --code prompts.                                                                                                                          |
+| Var                      | Description                                    |
+|--------------------------|------------------------------------------------|
+| OPENAI_API_KEY           | Your personal API key.                         |
+| OPENAI_COMPL_MODEL       | Model used for completion API calls.           |
+| OPENAI_COMPL_TEMPERATURE | Temperature for completion API calls.          |
+| OPENAI_COMPL_MAX_TOKENS  | Max tokens for completion API calls.           |
+| OPENAI_CHAT_MODEL        | Model used for chat API calls.                 |
+| OPENAI_CHAT_ROLE         | Default assistant role to start chat sessions. |
+| OPENAI_CHAT_TEMPERATURE  | Temperature for chat API calls.                |
+| OPENAI_SHELL_PREFIX      | Prefix to shell generation prompts.            |
+| OPENAI_CODE_PREFIX       | Prefix to code generation prompts.             |
+
+> Temperature vars require values between 0 and 2. Higher values make the output more random, lower values make it more  deterministic.
 
 ## Reference
 
