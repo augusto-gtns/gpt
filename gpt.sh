@@ -45,12 +45,26 @@ prompt_once(){
 	
 	echo -e "$(date) payload: \n $payload \n" > log.txt
 
-	response=$(curl https://api.openai.com/v1/completions \
-		-H "Content-Type: application/json" \
-		-H "Authorization: Bearer $OPENAI_API_KEY" \
-		-d "$payload" \
-		-k -L -s \
-		--connect-timeout 5 --max-time 10 --retry 3 --retry-delay 0 --retry-max-time 30)
+	while [ true ]; do
+		response=$(curl https://api.openai.com/v1/completions \
+			-H "Content-Type: application/json" \
+			-H "Authorization: Bearer $OPENAI_API_KEY" \
+			-d "$payload" \
+			-k -L -s \
+			--connect-timeout 10 --max-time 60 --retry 2 --retry-delay 0 --retry-max-time 120)
+		
+		if [ "$response" != "" ]; then
+			break
+		else # retry on error
+			try_again=""
+			while [[ "$try_again" != "y" && "$try_again" != "n" ]]; do
+				read -e -p "🔸no answer receiveid, try again? (y/n): " try_again
+			done
+			if [ "$try_again" == "n" ]; then
+				exit
+			fi
+		fi
+	done
 
 	echo -e "$(date) response: \n $response \n" >> log.txt
 
@@ -88,13 +102,27 @@ start_chat(){
 
 		echo -e "$(date) payload: \n $payload \n" >> log.txt
 		
-		response=$(curl https://api.openai.com/v1/chat/completions \
-			-H "Content-Type: application/json" \
-			-H "Authorization: Bearer $OPENAI_API_KEY" \
-			-d "$payload" \
-			-k -L -s \
-			--connect-timeout 5 --max-time 10 --retry 3 --retry-delay 0 --retry-max-time 30)
-		
+		while [ true ]; do
+			response=$(curl https://api.openai.com/v1/chat/completions \
+				-H "Content-Type: application/json" \
+				-H "Authorization: Bearer $OPENAI_API_KEY" \
+				-d "$payload" \
+				-k -L -s \
+				--connect-timeout 10 --max-time 60 --retry 2 --retry-delay 0 --retry-max-time 120)
+			
+			if [ "$response" != "" ]; then
+				break
+			else # retry on error
+				try_again=""
+				while [[ "$try_again" != "y" && "$try_again" != "n" ]]; do
+					read -e -p "🔸no answer receiveid, try again? (y/n): " try_again
+				done
+				if [ "$try_again" == "n" ]; then
+					exit
+				fi
+			fi
+		done
+
 		echo -e "$(date) response: \n $response \n" >> log.txt
 
 		answer=$(jq -r '.choices[].message.content' <<< "$response")	
