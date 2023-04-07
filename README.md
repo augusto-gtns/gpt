@@ -96,7 +96,7 @@ gpt --shell "list the name, path and size of the 5 biggest files on my whole com
 
 This options uses the completion API to answer a single prompt that aims to generate code for a given language.
 
-This is achieved by adding a prefix (`OPENAI_CODE_PREFIX`) to your actual prompt (works like a shortcut).
+This is achieved by adding a prefix (`OPENAI_CODE_PREFIX`) to your actual prompt.
 
 ```bash
 gpt --code
