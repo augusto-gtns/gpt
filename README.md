@@ -1,13 +1,13 @@
-# GPT3 script
+# GPT script
 
-Shell script to interact with GPT3 on your terminal.
+Shell script to interact with GPT on your terminal.
 
 ## Installation
 
-Clone this repo or download the `gpt3.sh` script.
+Clone this repo or download the `gpt.sh` script.
 
 ```bash
-git clone https://github.com/augusto-gtns/gpt3.git
+git clone https://github.com/augusto-gtns/gpt.git
 ```
 
 Generate and set your personal API key (https://platform.openai.com/account/api-keys)
@@ -19,7 +19,7 @@ export OPENAI_API_KEY=mykey
 Set execution permission.
 
 ```bash
-chmod +x gpt3.sh
+chmod +x gpt.sh
 ```
 
 Run the script on your terminal
@@ -27,17 +27,17 @@ Run the script on your terminal
 - call the script
 
   ```bash
-  ./gpt3.sh
+  ./gpt.sh
   ```
 
 - or map an alias on your shell configuration (`.bashrc`, `.zshrc` or others) and call the given alias
 
   ```bash
-  alias gpt3="~/gpt3.sh"
+  alias gpt="~/gpt.sh"
   ```
 
   ```bash
-  gpt3
+  gpt
   ```
 
 ## Usage
@@ -47,7 +47,7 @@ Run the script on your terminal
 **[prompt]**
 
 ```bash
-gpt3 what is the top 3 most popular programing languages
+gpt what is the top 3 most popular programing languages
 ```
 
 ### Start a new chat session
@@ -59,13 +59,13 @@ gpt3 what is the top 3 most popular programing languages
 - Using the default assistant role
 
   ```bash
-  gpt3 --chat
+  gpt --chat
   ```
 
 - Supply a custom assistant role
 
   ```bash
-  gpt3 -c You are a tech expert
+  gpt -c You are a tech expert
   ```
 
 ### Generate shell commands
@@ -73,11 +73,11 @@ gpt3 what is the top 3 most popular programing languages
 **[--shell|-s] [prompt]**
 
 ```bash
-gpt3 --shell
+gpt --shell
 ```
 
 ```bash
-gpt3 -s list the name path and size of the 5 biggest files on my machine
+gpt -s list the name path and size of the 5 biggest files on my machine
 ```
 
 ### Generate code
@@ -85,11 +85,11 @@ gpt3 -s list the name path and size of the 5 biggest files on my machine
 **[--code|-C] [lang]**
 
 ```bash
-gpt3 --code
+gpt --code
 ```
 
 ```bash
-gpt3 -C java
+gpt -C java
 ```
 
 ### See the usage helper:
@@ -97,16 +97,16 @@ gpt3 -C java
 **[--help|-h]**
 
 ```bash
-gpt3 -h
+gpt -h
 ```
 
 ```bash
-gpt3 --help
+gpt --help
 ```
 
 ## Configuration
 
-Available environment variables. Run `gpt3 --help` to check the default values.
+Available environment variables. Run `gpt --help` to check the default values.
 
 | Var                 | Description                                                                                                                                                |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |

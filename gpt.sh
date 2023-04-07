@@ -26,7 +26,7 @@ fi
 display_usage(){
 	echo "
 
-See https://github.com/augusto-gtns/gpt3.
+See https://github.com/augusto-gtns/gpt.
 
 Environment configuration values:
 
