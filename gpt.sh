@@ -43,6 +43,8 @@ prompt_once(){
 		"prompt": "'$prompt'"
 	}'
 	
+	echo -e "$(date) payload: \n $payload \n" > log.txt
+
 	response=$(curl https://api.openai.com/v1/completions \
 		-H "Content-Type: application/json" \
 		-H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -50,7 +52,9 @@ prompt_once(){
 		-k -L -s \
 		--connect-timeout 5 --max-time 10 --retry 3 --retry-delay 0 --retry-max-time 30)
 
-	answer=$(jq -r '.choices[].text' <<< "${response}")	
+	echo -e "$(date) response: \n $response \n" >> log.txt
+
+	answer=$(jq -r '.choices[].text' <<< "$response")	
 	printf "$answer \n"
 }
 
@@ -70,6 +74,8 @@ start_chat(){
 		]
 	}'
 
+	echo "" > log.txt
+
 	while [ true ]; do
 
 		while [ "$prompt" == "" ]; do
@@ -80,6 +86,8 @@ start_chat(){
 
 		payload=$(echo $payload | jq ".messages[.messages| length] |= . + $user_message")
 
+		echo -e "$(date) payload: \n $payload \n" >> log.txt
+		
 		response=$(curl https://api.openai.com/v1/chat/completions \
 			-H "Content-Type: application/json" \
 			-H "Authorization: Bearer $OPENAI_API_KEY" \
@@ -87,7 +95,9 @@ start_chat(){
 			-k -L -s \
 			--connect-timeout 5 --max-time 10 --retry 3 --retry-delay 0 --retry-max-time 30)
 		
-		answer=$(jq -r '.choices[].message.content' <<< "${response}")	
+		echo -e "$(date) response: \n $response \n" >> log.txt
+
+		answer=$(jq -r '.choices[].message.content' <<< "$response")	
 		printf "\n $answer \n\n"
 
 		# escape double quotes

@@ -72,7 +72,7 @@ This options uses the chat API to handle multiple sequential prompts.
 
 After that the actual chat will start.
 
-> The assistant role is used to tell the chat which role should be acted. 
+> The assistant role is used to tell the chat which role should be acted.
 
 ### Generate shell commands
 
@@ -106,7 +106,7 @@ gpt --code
 gpt --code java
 ```
 
-After that the actual prompt should be provided. 
+After that the actual prompt should be provided.
 
 ### See the usage helper:
 
@@ -125,7 +125,7 @@ gpt --help
 Available environment variables. Create a `.env.custom` to override the default config.
 
 | Var                      | Description                                    |
-|--------------------------|------------------------------------------------|
+| ------------------------ | ---------------------------------------------- |
 | OPENAI_API_KEY           | Your personal API key.                         |
 | OPENAI_COMPL_MODEL       | Model used for completion API calls.           |
 | OPENAI_COMPL_TEMPERATURE | Temperature for completion API calls.          |
@@ -136,7 +136,7 @@ Available environment variables. Create a `.env.custom` to override the default 
 | OPENAI_SHELL_PREFIX      | Prefix to shell generation prompts.            |
 | OPENAI_CODE_PREFIX       | Prefix to code generation prompts.             |
 
-> Temperature vars require values between 0 and 2. Higher values make the output more random, lower values make it more  deterministic.
+> Temperature vars require values between 0 and 2. Higher values make the output more random, lower values make it more deterministic.
 
 ## Reference
 
