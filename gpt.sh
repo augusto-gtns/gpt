@@ -4,6 +4,9 @@
 # init env
 ###
 
+# navigate to absolute path
+cd $(dirname "$0") || exit
+
 source .env # default env config
 
 [[ -f .env.custom ]] && source .env.custom # custom config
