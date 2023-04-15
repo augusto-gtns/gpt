@@ -26,10 +26,10 @@ display_usage(){
 
 	[--chat|-c] [assistant-role]: 	start a chat session
 
+	[--shell|-s] [prompt]:		generate shell comands
+
 	[--code|-C] [language]: 	generate code to a given language
 
-	[--shell|-s] [language]:	generate shell comands
-	
 	[--help|-h]:			display usage helper
 
 	See more on README.md or https://github.com/augusto-gtns/gpt
