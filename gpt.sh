@@ -1,32 +1,22 @@
 #!/bin/bash
 
-###
-# init env
-###
-
 cd $(dirname "$0") || exit # navigate to absolute path
 
 source .env # default env config
 
 [[ -f .env.custom ]] && source .env.custom # custom config
 
-if [ "$OPENAI_API_KEY" == "" ]; then
-	printf "\n please set OPENAI_API_KEY env var \n"
-	exit
-fi
+[[ "$OPENAI_API_KEY" == "" ]] && printf "\n please set OPENAI_API_KEY env var \n" && exit
 
-###
-# functions
-###
+### FUNCTIONS ### 
 
 should_retry(){
 	try_again=""
 	while [[ "$try_again" != "y" && "$try_again" != "n" ]]; do
 		read -e -p "🔸no answer receiveid, try again? (y/n): " try_again
 	done
-	if [ "$try_again" == "n" ]; then
-		exit 0
-	fi
+	
+	[[ "$try_again" == "n" ]] && exit 0
 }
 
 prompt_once(){
@@ -45,15 +35,11 @@ prompt_once(){
 		response=$(curl https://api.openai.com/v1/completions \
 			-H "Content-Type: application/json" \
 			-H "Authorization: Bearer $OPENAI_API_KEY" \
-			-d "$payload" \
-			-k -L -s \
+			-d "$payload" -k -L -s \
 			--connect-timeout 10 --max-time 60 --retry 2 --retry-delay 0 --retry-max-time 120)
 		
-		if [ "$response" != "" ]; then
-			break
-		else
-			should_retry
-		fi
+		[[ "$response" != "" ]] && break
+		should_retry
 	done
 
 	echo -e "$(date) response: \n $response \n" >> log.txt
@@ -64,22 +50,17 @@ prompt_once(){
 
 start_chat(){
 	role="$@"
-
-	if [ "$role" == "" ]; then
-		role=$OPENAI_CHAT_ROLE
-	fi
+	[[ "$role" == "" ]] && role=$OPENAI_CHAT_ROLE
 	printf "\n🔹assistant role: $role\n\n"
 
 	payload='{
 		"model": "'$OPENAI_CHAT_MODEL'",
 		"temperature": '$OPENAI_CHAT_TEMPERATURE',
-		"messages": [
-			{"role": "assistant", "content": "'$role'"}
-		]
+		"messages": [{"role": "assistant", "content": "'$role'"}]
 	}'
 
 	echo "" > log.txt
-
+	
 	while [ true ]; do
 
 		while [ "$prompt" == "" ]; do
@@ -96,15 +77,11 @@ start_chat(){
 			response=$(curl https://api.openai.com/v1/chat/completions \
 				-H "Content-Type: application/json" \
 				-H "Authorization: Bearer $OPENAI_API_KEY" \
-				-d "$payload" \
-				-k -L -s \
+				-d "$payload" -k -L -s \
 				--connect-timeout 10 --max-time 60 --retry 2 --retry-delay 0 --retry-max-time 120)
 			
-			if [ "$response" != "" ]; then
-				break
-			else 
-				should_retry
-			fi
+			[[ "$response" != "" ]] && break
+			should_retry
 		done
 
 		echo -e "$(date) response: \n $response \n" >> log.txt
@@ -112,8 +89,7 @@ start_chat(){
 		answer=$(jq -r '.choices[].message.content' <<< "$response")	
 		printf "\n $answer \n\n"
 
-		# escape double quotes
-		answer=$(echo $answer | sed 's/"/\\"/g')
+		answer=$(echo $answer | sed 's/"/\\"/g') # escape double quotes
 		
 		assistant_message='{"role": "assistant", "content": "'$answer'"}'
 
@@ -123,9 +99,7 @@ start_chat(){
 	done
 }
 
-###
-# MAIN
-###
+### MAIN ###
 
 if [[ ( $1 == "--help") ||  $1 == "-h" ]]; then 
 	cat usage.txt
@@ -134,7 +108,6 @@ elif [[ ( $1 == "--chat") ||  $1 == "-c" ]]; then
 	start_chat "${@:2}"
 
 elif [[ ( $1 == "--code") ||  $1 == "-C" ]]; then 
-	
 	lang="$2"
 	while [ "$lang" == "" ]; do
 		read -e -p "language: " lang
@@ -147,7 +120,6 @@ elif [[ ( $1 == "--code") ||  $1 == "-C" ]]; then
 	prompt_once "$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
 
 elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then 
-	
 	source /etc/lsb-release
 	my_os="$(uname) $(echo $DISTRIB_ID) $(echo $DISTRIB_RELEASE)"	
 
