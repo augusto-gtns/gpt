@@ -120,7 +120,7 @@ elif [[ ( $1 == "--code") ||  $1 == "-C" ]]; then
 	prompt_once "$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
 
 elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then 
-	source /etc/lsb-release
+	source /etc/*-release
 	my_os="$(uname) $(echo $DISTRIB_ID) $(echo $DISTRIB_RELEASE)"	
 
 	prompt="${@:2}"
