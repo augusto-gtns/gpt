@@ -4,8 +4,7 @@
 # init env
 ###
 
-# navigate to absolute path
-cd $(dirname "$0") || exit
+cd $(dirname "$0") || exit # navigate to absolute path
 
 source .env # default env config
 
@@ -19,22 +18,6 @@ fi
 ###
 # functions
 ###
-
-display_usage(){
-	echo "
-	[prompt]: 			prompt once
-
-	[--chat|-c] [assistant-role]: 	start a chat session
-
-	[--shell|-s] [prompt]:		generate shell comands
-
-	[--code|-C] [language]: 	generate code to a given language
-
-	[--help|-h]:			display usage helper
-
-	See more on README.md or https://github.com/augusto-gtns/gpt
-	"
-}
 
 should_retry(){
 	try_again=""
@@ -145,7 +128,7 @@ start_chat(){
 ###
 
 if [[ ( $1 == "--help") ||  $1 == "-h" ]]; then 
-	display_usage
+	cat usage.txt
 
 elif [[ ( $1 == "--chat") ||  $1 == "-c" ]]; then 	
 	start_chat "${@:2}"
