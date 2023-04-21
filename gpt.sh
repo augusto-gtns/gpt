@@ -36,6 +36,16 @@ display_usage(){
 	"
 }
 
+should_retry(){
+	try_again=""
+	while [[ "$try_again" != "y" && "$try_again" != "n" ]]; do
+		read -e -p "🔸no answer receiveid, try again? (y/n): " try_again
+	done
+	if [ "$try_again" == "n" ]; then
+		exit 0
+	fi
+}
+
 prompt_once(){
 	prompt="$@"
 
@@ -58,14 +68,8 @@ prompt_once(){
 		
 		if [ "$response" != "" ]; then
 			break
-		else # retry on error
-			try_again=""
-			while [[ "$try_again" != "y" && "$try_again" != "n" ]]; do
-				read -e -p "🔸no answer receiveid, try again? (y/n): " try_again
-			done
-			if [ "$try_again" == "n" ]; then
-				exit
-			fi
+		else
+			should_retry
 		fi
 	done
 
@@ -115,14 +119,8 @@ start_chat(){
 			
 			if [ "$response" != "" ]; then
 				break
-			else # retry on error
-				try_again=""
-				while [[ "$try_again" != "y" && "$try_again" != "n" ]]; do
-					read -e -p "🔸no answer receiveid, try again? (y/n): " try_again
-				done
-				if [ "$try_again" == "n" ]; then
-					exit
-				fi
+			else 
+				should_retry
 			fi
 		done
 
