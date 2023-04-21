@@ -8,6 +8,12 @@ source .env # default env config
 
 [[ "$OPENAI_API_KEY" == "" ]] && printf "\n please set OPENAI_API_KEY env var \n" && exit
 
+if ! [ -f log.txt ]; then # check required dependencies once
+	for x in curl jq; do
+		[[ "$(which $x)" == "" ]] && echo "ERROR: '$x' is a required dependency and should be installed." && exit
+	done
+fi
+
 ### FUNCTIONS ### 
 
 should_retry(){
