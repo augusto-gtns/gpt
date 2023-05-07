@@ -88,7 +88,9 @@ prompt_once(){
 
 	echo -e "$(date) response: \n $response \n" >> $log_file
 
-	answer=$(jq -r '.choices[].text' <<< "$response") 
+	answer=$(jq -r '.choices[]?.text' <<< "$response") 
+	[[ "$answer" == "" ]] && echo "🔸Unexpected response: $response" && exit 1
+
 	print_answer "$answer \n"
 }
 
@@ -134,7 +136,8 @@ start_chat(){
 
 		echo -e "$(date) response: \n $response \n" >> $log_file
 
-		answer=$(jq -r '.choices[].message.content' <<< "$response")	
+		answer=$(jq -r '.choices[]?.message?.content' <<< "$response")	
+		[[ "$answer" == "" ]] && echo "🔸Unexpected response: $response" && exit 1
 
 		print_answer "\n $answer \n\n"
 
