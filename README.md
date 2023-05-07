@@ -120,6 +120,8 @@ gpt -h
 gpt --help
 ```
 
+> All chat or prompt iterations are stored at 📁`log` folder as a `.txt` file.
+
 ## Configuration
 
 Available environment variables. Create a `.env.custom` to override the default config.
