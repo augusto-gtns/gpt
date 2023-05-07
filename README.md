@@ -16,6 +16,8 @@ Generate and set your personal API key (https://platform.openai.com/account/api-
 export OPENAI_API_KEY=mykey
 ```
 
+> If not found `OPENAI_API_KEY` will be prompted and saved to `.env.custom`.
+
 Set execution permission
 
 ```bash

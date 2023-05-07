@@ -6,9 +6,22 @@ source .env # default env config
 
 [[ -f .env.custom ]] && source .env.custom # custom config
 
-[[ "$OPENAI_API_KEY" == "" ]] && printf "\n please set OPENAI_API_KEY env var \n" && exit
+if [[ "$OPENAI_API_KEY" == "" ]]; then # ask for api key if not exists
+	ask="OPENAI_API_KEY envinromet varible not found. Please provide a valid key (https://platform.openai.com/account/api-keys):"
+	
+	api_key=""
+	while [[ "$api_key" == "" ]]; do
+		read -e -p "$ask" api_key
+	done
+	
+	touch .env.custom
+	echo -e "OPENAI_API_KEY=$api_key\n\n$(cat .env.custom)" > .env.custom # add env var to begin of custom env file
+	source .env.custom
+	
+	echo "*** OPENAI_API_KEY added to .env.custom file ***"
+fi
 
-if ! [ -d log ]; then # create folder if not exists
+if ! [ -d log ]; then # create log folder if not exists
 
 	for x in curl jq; do # check required dependencies once
 		[[ "$(which $x)" == "" ]] && echo "ERROR: '$x' is a required dependency and should be installed." && exit
