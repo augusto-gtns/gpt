@@ -8,8 +8,11 @@ source .env # default env config
 
 [[ "$OPENAI_API_KEY" == "" ]] && printf "\n please set OPENAI_API_KEY env var \n" && exit
 
-if ! [ -f log.txt ]; then # check required dependencies once
-	for x in curl jq; do
+if ! [ -d log ]; then # create folder if not exists
+	mkdir -p log/chat
+	mkdir -p log/prompt
+
+	for x in curl jq; do # check required dependencies once
 		[[ "$(which $x)" == "" ]] && echo "ERROR: '$x' is a required dependency and should be installed." && exit
 	done
 fi
@@ -35,7 +38,8 @@ prompt_once(){
 		"prompt": "'$prompt'"
 	}'
 	
-	echo -e "$(date) payload: \n $payload \n" > log.txt
+	log_file="log/prompt/log-$(date '+%Y-%m-%d_%H-%M-%S').txt"
+	echo -e "$(date) payload: \n $payload \n" > $log_file
 
 	while [ true ]; do
 		response=$(curl https://api.openai.com/v1/completions \
@@ -48,7 +52,7 @@ prompt_once(){
 		should_retry
 	done
 
-	echo -e "$(date) response: \n $response \n" >> log.txt
+	echo -e "$(date) response: \n $response \n" >> $log_file
 
 	answer=$(jq -r '.choices[].text' <<< "$response")	
 	printf "$answer \n"
@@ -65,7 +69,8 @@ start_chat(){
 		"messages": [{"role": "assistant", "content": "'$role'"}]
 	}'
 
-	echo "" > log.txt
+	log_file="log/chat/log-$(date '+%Y-%m-%d_%H-%M-%S').txt"
+	echo "" > $log_file
 	
 	while [ true ]; do
 
@@ -77,7 +82,7 @@ start_chat(){
 
 		payload=$(echo $payload | jq ".messages[.messages| length] |= . + $user_message")
 
-		echo -e "$(date) payload: \n $payload \n" >> log.txt
+		echo -e "$(date) payload: \n $payload \n" >> $log_file
 		
 		while [ true ]; do
 			response=$(curl https://api.openai.com/v1/chat/completions \
@@ -90,7 +95,7 @@ start_chat(){
 			should_retry
 		done
 
-		echo -e "$(date) response: \n $response \n" >> log.txt
+		echo -e "$(date) response: \n $response \n" >> $log_file
 
 		answer=$(jq -r '.choices[].message.content' <<< "$response")	
 		printf "\n $answer \n\n"
