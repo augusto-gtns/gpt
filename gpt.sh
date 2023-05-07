@@ -9,12 +9,13 @@ source .env # default env config
 [[ "$OPENAI_API_KEY" == "" ]] && printf "\n please set OPENAI_API_KEY env var \n" && exit
 
 if ! [ -d log ]; then # create folder if not exists
-	mkdir -p log/chat
-	mkdir -p log/prompt
 
 	for x in curl jq; do # check required dependencies once
 		[[ "$(which $x)" == "" ]] && echo "ERROR: '$x' is a required dependency and should be installed." && exit
 	done
+	
+	mkdir -p log/prompt
+	mkdir -p log/chat
 fi
 
 ### FUNCTIONS ### 
@@ -26,6 +27,14 @@ should_retry(){
 	done
 	
 	[[ "$try_again" == "n" ]] && exit 0
+}
+
+print_answer(){
+	answer="$1"
+
+	answer=$(sed 's/%/%%/g' <<< "$answer") # escape percent char before print
+	
+	printf "$answer"
 }
 
 prompt_once(){
@@ -54,8 +63,8 @@ prompt_once(){
 
 	echo -e "$(date) response: \n $response \n" >> $log_file
 
-	answer=$(jq -r '.choices[].text' <<< "$response")	
-	printf "$answer \n"
+	answer=$(jq -r '.choices[].text' <<< "$response") 
+	print_answer "$answer \n"
 }
 
 start_chat(){
@@ -98,7 +107,8 @@ start_chat(){
 		echo -e "$(date) response: \n $response \n" >> $log_file
 
 		answer=$(jq -r '.choices[].message.content' <<< "$response")	
-		printf "\n $answer \n\n"
+
+		print_answer "\n $answer \n\n"
 
 		answer=$(echo $answer | sed 's/"/\\"/g') # escape double quotes
 		
