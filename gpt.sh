@@ -14,8 +14,7 @@ if ! [ -d log ]; then # create folder if not exists
 		[[ "$(which $x)" == "" ]] && echo "ERROR: '$x' is a required dependency and should be installed." && exit
 	done
 	
-	mkdir -p log/prompt
-	mkdir -p log/chat
+	mkdir -p log
 fi
 
 ### FUNCTIONS ### 
@@ -37,8 +36,21 @@ print_answer(){
 	printf "$answer"
 }
 
+build_title(){
+	local prompt=$1
+	
+	echo -e $prompt | sed s/[^[:alnum:]+]/-/g # replace non alphanumeric chars
+}
+
+build_log_file_name(){
+	local title=$1
+
+	echo "log/log_$(date '+%Y%m%d-%H%M%S')_$title.txt"
+}
+
 prompt_once(){
-	prompt="$@"
+	local title="$1"
+	local prompt="$2"
 
 	payload='{
 		"model": "'$OPENAI_COMPL_MODEL'",
@@ -47,7 +59,7 @@ prompt_once(){
 		"prompt": "'$prompt'"
 	}'
 	
-	log_file="log/prompt/log-$(date '+%Y-%m-%d_%H-%M-%S').txt"
+	log_file=$(build_log_file_name "$title")
 	echo -e "$(date) payload: \n $payload \n" > $log_file
 
 	while [ true ]; do
@@ -78,14 +90,17 @@ start_chat(){
 		"messages": [{"role": "assistant", "content": "'$role'"}]
 	}'
 
-	log_file="log/chat/log-$(date '+%Y-%m-%d_%H-%M-%S').txt"
-	echo "" > $log_file
-	
+	log_file=""
 	while [ true ]; do
 
 		while [ "$prompt" == "" ]; do
 			read -e -p "🔹you: " prompt
 		done
+
+		if [[ $log_file == "" ]]; then 
+			title=$(build_title "$prompt")
+			log_file=$(build_log_file_name "CHAT_$title")
+		fi
 
 		user_message='{"role": "user", "content": "'$prompt'"}'
 
@@ -138,7 +153,10 @@ elif [[ ( $1 == "--code") ||  $1 == "-C" ]]; then
 		read -e -p "code generation prompt: " prompt
 	done
 
-	prompt_once "$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
+	title=$(build_title "$prompt")
+	full_prompt="$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
+
+	prompt_once "CODE_$title" "$full_prompt"
 
 elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then 
 	source /etc/*-release
@@ -149,7 +167,10 @@ elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then
 		read -e -p "shell generation prompt: " prompt
 	done
 
-	prompt_once "$OPENAI_SHELL_PREFIX \n\n [os]: $my_os \n\n [prompt]: $prompt"
+	title=$(build_title "$prompt")
+	full_prompt="$OPENAI_SHELL_PREFIX \n\n [os]: $my_os \n\n [prompt]: $prompt"
+
+	prompt_once "SHELL_$title" "$full_prompt"
 
 else	
 	prompt="$@"
@@ -157,5 +178,7 @@ else
 		read -e -p "prompt once: " prompt
 	done
 
-	prompt_once $prompt
+	title=$(build_title "$prompt")
+	
+	prompt_once "PROMPT_$title" "$prompt"
 fi
