@@ -10,15 +10,13 @@ if [[ "$OPENAI_API_KEY" == "" ]]; then # ask for api key if not exists
 	ask="OPENAI_API_KEY envinromet varible not found. Please provide a valid key (https://platform.openai.com/account/api-keys):"
 	
 	api_key=""
-	while [[ "$api_key" == "" ]]; do
-		read -e -p "$ask" api_key
-	done
+	while [[ "$api_key" == "" ]]; do read -e -p "$ask" api_key; done
 	
 	touch .env.custom
 	echo -e "OPENAI_API_KEY=$api_key\n\n$(cat .env.custom)" > .env.custom # add env var to begin of custom env file
+
+	echo "*** OPENAI_API_KEY added to .env.custom file ***"	
 	source .env.custom
-	
-	echo "*** OPENAI_API_KEY added to .env.custom file ***"
 fi
 
 if ! [ -d log ]; then # create log folder if not exists
@@ -33,7 +31,7 @@ fi
 ### FUNCTIONS ### 
 
 should_retry(){
-	try_again=""
+	local try_again=""
 	while [[ "$try_again" != "y" && "$try_again" != "n" ]]; do
 		read -e -p "🔸no answer receiveid, try again? (y/n): " try_again
 	done
@@ -42,7 +40,7 @@ should_retry(){
 }
 
 print_answer(){
-	answer="$1"
+	local answer="$1"
 
 	answer=$(sed 's/%/%%/g' <<< "$answer") # escape percent char before print
 	
@@ -95,22 +93,20 @@ prompt_once(){
 }
 
 start_chat(){
-	role="$@"
+	local role="$@"
 	[[ "$role" == "" ]] && role=$OPENAI_CHAT_ROLE
 	printf "\n🔹assistant role: $role\n\n"
 
-	payload='{
+	local payload='{
 		"model": "'$OPENAI_CHAT_MODEL'",
 		"temperature": '$OPENAI_CHAT_TEMPERATURE',
 		"messages": [{"role": "assistant", "content": "'$role'"}]
 	}'
 
-	log_file=""
+	local log_file=""
 	while [ true ]; do
 
-		while [ "$prompt" == "" ]; do
-			read -e -p "🔹you: " prompt
-		done
+		while [ "$prompt" == "" ]; do read -e -p "🔹you: " prompt; done
 
 		if [[ $log_file == "" ]]; then 
 			title=$(build_title "$prompt")
@@ -160,14 +156,10 @@ elif [[ ( $1 == "--chat") ||  $1 == "-c" ]]; then
 	start_chat "${@:2}"
 
 elif [[ ( $1 == "--code") ||  $1 == "-C" ]]; then 
-	lang="$2"
-	while [ "$lang" == "" ]; do
-		read -e -p "language: " lang
-	done
+	lang="${@:2}"
+	while [ "$lang" == "" ]; do read -e -p "language: " lang; done
 
-	while [ "$prompt" == "" ]; do
-		read -e -p "code generation prompt: " prompt
-	done
+	while [ "$prompt" == "" ]; do read -e -p "code prompt: " prompt; done
 
 	title=$(build_title "$prompt")
 	full_prompt="$OPENAI_CODE_PREFIX \n\n [lang]: $lang \n\n [prompt]: $prompt"
@@ -179,9 +171,7 @@ elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then
 	my_os="$(uname) $(echo $DISTRIB_ID) $(echo $DISTRIB_RELEASE)"	
 
 	prompt="${@:2}"
-	while [ "$prompt" == "" ]; do
-		read -e -p "shell generation prompt: " prompt
-	done
+	while [ "$prompt" == "" ]; do read -e -p "shell prompt: " prompt; done
 
 	title=$(build_title "$prompt")
 	full_prompt="$OPENAI_SHELL_PREFIX \n\n [os]: $my_os \n\n [prompt]: $prompt"
@@ -190,9 +180,7 @@ elif [[ ( $1 == "--shell") ||  $1 == "-s" ]]; then
 
 else	
 	prompt="$@"
-	while [ "$prompt" == "" ]; do
-		read -e -p "prompt once: " prompt
-	done
+	while [ "$prompt" == "" ]; do read -e -p "prompt once: " prompt; done
 
 	title=$(build_title "$prompt")
 	
